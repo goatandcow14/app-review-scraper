@@ -1,0 +1,12 @@
+{
+  "name": "app-review-scraper-mcp",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "description": "Remote MCP server exposing Play Store and App Store review search/fetch tools, for Claude's custom connector.",
+  "dependencies": {
+  }
+}
