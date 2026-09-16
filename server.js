@@ -186,6 +186,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/healthz", (_req, res) => res.status(200).send("ok"));
+app.get("/", (_req, res) => res.status(200).send("app-review-scraper is running. See /healthz or POST /mcp."));
 
 app.use("/mcp", (req, res, next) => {
   if (req.header("x-api-key") !== API_KEY) return res.status(401).json({ error: "unauthorized" });
