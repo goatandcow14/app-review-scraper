@@ -189,7 +189,10 @@ app.get("/healthz", (_req, res) => res.status(200).send("ok"));
 app.get("/", (_req, res) => res.status(200).send("app-review-scraper is running. See /healthz or POST /mcp."));
 
 app.use("/mcp", (req, res, next) => {
-  if (req.header("x-api-key") !== API_KEY) return res.status(401).json({ error: "unauthorized" });
+  // Accept the key either as a header OR as a ?key= query param on the URL —
+  // whichever Claude's connector UI actually lets you set, this covers it.
+  const suppliedKey = req.header("x-api-key") || req.query.key;
+  if (suppliedKey !== API_KEY) return res.status(401).json({ error: "unauthorized" });
   next();
 });
 
