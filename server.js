@@ -188,6 +188,15 @@ app.use(express.json());
 app.get("/healthz", (_req, res) => res.status(200).send("ok"));
 app.get("/", (_req, res) => res.status(200).send("app-review-scraper is running. See /healthz or POST /mcp."));
 
+// TEMPORARY — delete this route once the key mismatch is fixed.
+// Shows the length and first/last 3 characters of the key Render actually
+// has stored, without exposing the whole thing, so we can spot a stray
+// space or wrong value without guessing.
+app.get("/debug-key", (_req, res) => {
+  const k = API_KEY || "";
+  res.json({ length: k.length, preview: k.length > 6 ? `${k.slice(0, 3)}...${k.slice(-3)}` : k });
+});
+
 app.use("/mcp", (req, res, next) => {
   // Accept the key either as a header OR as a ?key= query param on the URL —
   // whichever Claude's connector UI actually lets you set, this covers it.
