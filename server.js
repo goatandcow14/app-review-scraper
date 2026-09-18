@@ -1,4 +1,4 @@
-// ONE FILE, does everything: Play Store + App Store review tools, served
+//  // ONE FILE, does everything: Play Store + App Store review tools, served
 // over HTTP so Claude's REMOTE connector can reach it once this is deployed
 // (e.g. on Render). Kept as a single flat file on purpose — easier to
 // upload from a phone with no folder-structure issues.
@@ -226,3 +226,4 @@ app.delete("/mcp/:secret", (_req, res) => res.status(405).json({ error: "Method 
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`app-review-scraper listening on port ${PORT}`));
+        
