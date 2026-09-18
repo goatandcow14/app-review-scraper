@@ -197,15 +197,17 @@ app.get("/debug-key", (_req, res) => {
   res.json({ length: k.length, preview: k.length > 6 ? `${k.slice(0, 3)}...${k.slice(-3)}` : k });
 });
 
-app.use("/mcp", (req, res, next) => {
-  // Accept the key either as a header OR as a ?key= query param on the URL —
-  // whichever Claude's connector UI actually lets you set, this covers it.
-  const suppliedKey = req.header("x-api-key") || req.query.key;
-  if (suppliedKey !== API_KEY) return res.status(401).json({ error: "unauthorized" });
+// The secret lives IN THE PATH, not a header or query param. Wrong or
+// missing secret returns a plain 404 — never 401 — so Claude's connector
+// never sees an "auth required" style status and won't override your
+// "No sign-in" choice. Your Server URL in Claude must be the full path
+// including the real key: https://your-app.onrender.com/mcp/<MCP_API_KEY>
+app.use("/mcp/:secret", (req, res, next) => {
+  if (req.params.secret !== API_KEY) return res.status(404).send("Not found");
   next();
 });
 
-app.post("/mcp", async (req, res) => {
+app.post("/mcp/:secret", async (req, res) => {
   try {
     const server = new McpServer({ name: "app-review-scraper", version: "2.0.0" });
     registerTools(server);
@@ -219,8 +221,8 @@ app.post("/mcp", async (req, res) => {
   }
 });
 
-app.get("/mcp", (_req, res) => res.status(405).json({ error: "Method not allowed (stateless server)" }));
-app.delete("/mcp", (_req, res) => res.status(405).json({ error: "Method not allowed (stateless server)" }));
+app.get("/mcp/:secret", (_req, res) => res.status(405).json({ error: "Method not allowed (stateless server)" }));
+app.delete("/mcp/:secret", (_req, res) => res.status(405).json({ error: "Method not allowed (stateless server)" }));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`app-review-scraper listening on port ${PORT}`));
