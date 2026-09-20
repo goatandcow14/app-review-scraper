@@ -346,6 +346,14 @@ app.use(express.json());
 app.get("/healthz", (_req, res) => res.status(200).send("ok"));
 app.get("/", (_req, res) => res.status(200).send("app-review-scraper is running. See /healthz or POST /mcp."));
 
+// Proves exactly which tools THIS running file actually registers, independent
+// of what Claude's connector may have cached from an earlier connection.
+app.get("/debug-tools", (_req, res) => {
+  const names = [];
+  registerTools({ registerTool: (name) => names.push(name) });
+  res.json({ toolCount: names.length, tools: names });
+});
+
 // TEMPORARY — delete this route once the key mismatch is fixed.
 // Shows the length and first/last 3 characters of the key Render actually
 // has stored, without exposing the whole thing, so we can spot a stray
