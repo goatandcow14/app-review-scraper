@@ -383,4 +383,4 @@ app.get("/mcp/:secret", (_req, res) => res.status(405).json({ error: "Method not
 app.delete("/mcp/:secret", (_req, res) => res.status(405).json({ error: "Method not allowed (stateless server)" }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => c
+app.listen(PORT, () => console.log(`app-review-scraper listening on port ${PORT}`));
